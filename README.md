@@ -46,4 +46,4 @@ The current reading speed (in words per minute) is displayed below the "Settings
 
 ## License
 
-(Your chosen license here)
+This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details
