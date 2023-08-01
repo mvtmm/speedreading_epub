@@ -1,10 +1,42 @@
-configuration: Release
+# Set the build version
+version: 1.0.{build}
 
-# restore NuGet packages before running MSBuild
-before_build:
-  - nuget restore
+# Set the build image to a version that includes Python 3.8
+image: Visual Studio 2019
 
-# package WebApp project for deployment
-build:
-  verbosity: minimal
-  publish_wap: true
+# Set up the environment
+environment:
+  matrix:
+    - PYTHON: "C:\\Python38"
+      PYTHON_VERSION: "3.8"
+      PYTHON_ARCH: "32"
+
+# Set up the build
+build_script:
+  - "echo Building..."
+
+# Install dependencies
+install:
+  - "echo Installing dependencies..."
+  - "%PYTHON%\\python.exe -m pip install --upgrade pip"
+  - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
+  - "%PYTHON%\\python.exe -m pip install pyinstaller"
+
+# Run the build
+build_script:
+  - "echo Building..."
+  - "%PYTHON%\\python.exe -m PyInstaller --onefile --windowed your_main_script.py"
+
+# Set up the artifact
+artifacts:
+  - path: dist\speedreader.exe
+    name: SpeedReader
+
+# Deploy the artifact
+deploy:
+  - provider: GitHub
+    artifact: SpeedReader
+    draft: false
+    prerelease: false
+    on:
+      branch: main
