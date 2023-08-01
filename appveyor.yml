@@ -28,7 +28,7 @@ for:
   - cmd: python -m pip install pyinstaller
 
   build_script:
-  - cmd: pyinstaller --onefile your_main_script.py
+  - cmd: pyinstaller --onefile app.py
 
   artifacts:
   - path: dist\speedreader.exe
@@ -49,7 +49,7 @@ for:
   - sh: pip install pyinstaller
 
   build_script:
-  - sh: pyinstaller --onefile your_main_script.py
+  - sh: pyinstaller --onefile app.py
 
   artifacts:
   - path: dist/speedreader_l
@@ -70,7 +70,7 @@ for:
   - sh: pip install pyinstaller
 
   build_script:
-  - sh: pyinstaller --onefile your_main_script.py
+  - sh: pyinstaller --onefile app.py
 
   artifacts:
   - path: dist/speedreader_ios
