@@ -24,17 +24,17 @@ class SpeedReader(tk.Tk):
         self.bind("<Up>", self.increase_speed)  # Bind up arrow key to increase_speed
         self.bind("<Down>", self.decrease_speed) # Bind down arrow key to decrease speed
 
+        self.wpm_label = tk.Label(self, text=f"WPM: {self.words_per_minute}")
+        self.wpm_label.grid(row=1, column=0, pady=10)
+        
         self.start_button = tk.Button(self, text="Start", command=self.start_reading)
-        self.start_button.grid(row=1, column=0, pady=10)
+        self.start_button.grid(row=2, column=0, pady=10)
 
         self.pause_button = tk.Button(self, text="Pause", command=self.toggle_pause)
-        self.pause_button.grid(row=2, column=0, pady=10)
+        self.pause_button.grid(row=3, column=0, pady=10)
 
         self.settings_button = tk.Button(self, text="Settings", command=self.open_settings)
-        self.settings_button.grid(row=3, column=0, pady=10)
-
-        self.wpm_label = tk.Label(self, text=f"WPM: {self.words_per_minute}")
-        self.wpm_label.grid(row=4, column=0, pady=10)
+        self.settings_button.grid(row=4, column=0, pady=10)
 
         self.reset_button = tk.Button(self, text="Reset", command=self.reset)
         self.reset_button.grid(row=6, column=0, pady=10)
