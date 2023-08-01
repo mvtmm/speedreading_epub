@@ -44,7 +44,7 @@ The current reading speed (in words per minute) is displayed below the "Settings
 
 ## Author
 
-(Your name here)
+Marvin Timm
 
 ## License
 
