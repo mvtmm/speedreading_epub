@@ -1,7 +1,6 @@
 environment:
   matrix:
     - job_name: Windows
-      QTDIR: C:\Qt\5.10.1\msvc2017_64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
     - job_name: Linux
@@ -12,9 +11,9 @@ environment:
 
 matrix:
   fast_finish: true
-  
+
 for:
-  
+
 # ======================================
 #      Windows
 # ======================================
@@ -26,9 +25,13 @@ for:
 
   init:
   - echo "Init for Windows"
+  - cmd: python -m pip install pyinstaller
 
   build_script:
-  - echo "Build for Windows"
+  - cmd: pyinstaller --onefile your_main_script.py
+
+  artifacts:
+  - path: dist\speedreader.exe
 
   test: off
 
@@ -43,9 +46,13 @@ for:
 
   init:
   - echo "Init for Linux"
+  - sh: pip install pyinstaller
 
   build_script:
-  - echo "Build for Linux"
+  - sh: pyinstaller --onefile your_main_script.py
+
+  artifacts:
+  - path: dist/speedreader_l
 
   test: off
 
@@ -60,8 +67,12 @@ for:
 
   init:
   - echo "Init for macOS"
+  - sh: pip install pyinstaller
 
   build_script:
-  - echo "Build for macOS"
+  - sh: pyinstaller --onefile your_main_script.py
+
+  artifacts:
+  - path: dist/speedreader_ios
 
   test: off
