@@ -2,6 +2,8 @@
 
 SpeedReader is a Python application that helps you improve your reading speed by displaying a book's content at a configurable speed. You can control the number of words displayed at a time, the speed at which they are displayed, and the ability to pause and resume reading. The application uses a graphical user interface provided by the Tkinter library.
 
+If you dont want to run the code, you can use the dist/app.exe for windows or the dist/app for mac.
+
 ![Screenshot of the application](screenshot.png)
 
 ## Installation
