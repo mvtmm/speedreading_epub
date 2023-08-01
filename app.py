@@ -10,21 +10,27 @@ class SpeedReader(tk.Tk):
     def __init__(self):
         super().__init__()
         self.geometry("800x600")  # Set initial window size
-        self.words_per_minute = 400
+        self.base_font_size = 48
+        self.word_label = tk.Label(self, font=("Helvetica", self.base_font_size))
+        self.word_label.grid(row=0, column=0, sticky='ew') 
+        self.words_per_minute = 300
         self.words_at_a_time = 1
         self.pause_reading = False
         self.stop_reading = Event()
-        self.word_label = tk.Label(self, font=("Helvetica", 48), width=10)
-        self.word_label.pack(pady=20)
+        self.chapter_dropdown = None
 
         self.start_button = tk.Button(self, text="Start", command=self.start_reading)
-        self.start_button.pack(pady=20)
+        self.start_button.grid(row=1, column=0)
 
         self.pause_button = tk.Button(self, text="Pause", command=self.toggle_pause)
-        self.pause_button.pack(pady=20)
+        self.pause_button.grid(row=2, column=0)
 
         self.settings_button = tk.Button(self, text="Settings", command=self.open_settings)
-        self.settings_button.pack(pady=20)
+        self.settings_button.grid(row=3, column=0)
+
+        self.reset_button = tk.Button(self, text="Reset", command=self.reset)
+        self.reset_button.grid(row=4, column=0)  
+        self.grid_columnconfigure(0, weight=1) 
 
     def start_reading(self):
         epub_file = filedialog.askopenfilename(filetypes=[("EPUB files", "*.epub")])
@@ -44,12 +50,26 @@ class SpeedReader(tk.Tk):
 
         chapter_var = tk.StringVar(self)
         chapter_var.trace('w', select_chapter)
-        chapter_dropdown = tk.OptionMenu(self, chapter_var, *chapter_names)
-        chapter_dropdown.pack()
+        self.chapter_dropdown = tk.OptionMenu(self, chapter_var, *chapter_names)
+        if self.chapter_dropdown is not None:
+            self.chapter_dropdown.grid_forget()  
+            self.chapter_dropdown = tk.OptionMenu(self, chapter_var, *chapter_names)
+            self.chapter_dropdown.grid(row=5, column=0) 
 
+    def reset(self):
+        self.stop_reading.set()  # Stop any ongoing speed reading
+        self.stop_reading.clear()  # Reset the stop flag
+        if self.chapter_dropdown is not None:
+            self.chapter_dropdown.grid_forget()  # Remove the dropdown menu
+            self.chapter_dropdown = None
 
-
+            
     def speed_read(self, text):
+        for i in range(3, 0, -1):  # Countdown from 3 to 1
+            self.word_label.config(text=str(i))
+            time.sleep(1)
+        self.word_label.config(text="Go!")
+        time.sleep(1)
         words = text.split() # Split the text into words
         for i in range(0, len(words), self.words_at_a_time):
             if self.stop_reading.is_set():
