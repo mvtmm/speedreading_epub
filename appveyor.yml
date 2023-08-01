@@ -1,42 +1,67 @@
-# Set the build version
-version: 1.0.{build}
-
-# Set the build image to a version that includes Python 3.8
-image: Visual Studio 2019
-
-# Set up the environment
-environment:
+nvironment:
   matrix:
-    - PYTHON: "C:\\Python38"
-      PYTHON_VERSION: "3.8"
-      PYTHON_ARCH: "32"
+    - job_name: Windows
+      QTDIR: C:\Qt\5.10.1\msvc2017_64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
-# Set up the build
-build_script:
-  - "echo Building..."
+    - job_name: Linux
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-# Install dependencies
-install:
-  - "echo Installing dependencies..."
-  - "%PYTHON%\\python.exe -m pip install --upgrade pip"
-  - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
-  - "%PYTHON%\\python.exe -m pip install pyinstaller"
+    - job_name: macOS
+      APPVEYOR_BUILD_WORKER_IMAGE: macOS
 
-# Run the build
-build_script:
-  - "echo Building..."
-  - "%PYTHON%\\python.exe -m PyInstaller --onefile --windowed your_main_script.py"
+matrix:
+  fast_finish: true
+  
+for:
+  
+# ======================================
+#      Windows
+# ======================================
 
-# Set up the artifact
-artifacts:
-  - path: dist\speedreader.exe
-    name: SpeedReader
+-
+  matrix:
+    only:
+    - job_name: Windows
 
-# Deploy the artifact
-deploy:
-  - provider: GitHub
-    artifact: SpeedReader
-    draft: false
-    prerelease: false
-    on:
-      branch: main
+  init:
+  - echo "Init for Windows"
+
+  build_script:
+  - echo "Build for Windows"
+
+  test: off
+
+# ======================================
+#      Linux
+# ======================================
+
+-
+  matrix:
+    only:
+    - job_name: Linux
+
+  init:
+  - echo "Init for Linux"
+
+  build_script:
+  - echo "Build for Linux"
+
+  test: off
+
+# ======================================
+#      macOS
+# ======================================
+
+-
+  matrix:
+    only:
+    - job_name: macOS
+
+  init:
+  - echo "Init for macOS"
+
+  build_script:
+  - echo "Build for macOS"
+
+  test: off
