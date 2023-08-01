@@ -31,7 +31,7 @@ for:
   - cmd: pyinstaller --onefile app.py
 
   artifacts:
-  - path: dist\speedreader.exe
+  - path: speedreader.exe
 
   test: off
 
