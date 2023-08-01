@@ -19,18 +19,36 @@ class SpeedReader(tk.Tk):
         self.stop_reading = Event()
         self.chapter_dropdown = None
 
+
+        self.bind("<space>", self.toggle_pause)  # Bind space key to toggle_pause
+        self.bind("<Up>", self.increase_speed)  # Bind up arrow key to increase_speed
+        self.bind("<Down>", self.decrease_speed) # Bind down arrow key to decrease speed
+
         self.start_button = tk.Button(self, text="Start", command=self.start_reading)
-        self.start_button.grid(row=1, column=0)
+        self.start_button.grid(row=1, column=0, pady=10)
 
         self.pause_button = tk.Button(self, text="Pause", command=self.toggle_pause)
-        self.pause_button.grid(row=2, column=0)
+        self.pause_button.grid(row=2, column=0, pady=10)
 
         self.settings_button = tk.Button(self, text="Settings", command=self.open_settings)
-        self.settings_button.grid(row=3, column=0)
+        self.settings_button.grid(row=3, column=0, pady=10)
+
+        self.wpm_label = tk.Label(self, text=f"WPM: {self.words_per_minute}")
+        self.wpm_label.grid(row=4, column=0, pady=10)
 
         self.reset_button = tk.Button(self, text="Reset", command=self.reset)
-        self.reset_button.grid(row=4, column=0)  
+        self.reset_button.grid(row=6, column=0, pady=10)
         self.grid_columnconfigure(0, weight=1) 
+
+    def increase_speed(self, event):
+        self.words_per_minute += 20
+        self.wpm_label.config(text=f"WPM: {self.words_per_minute}")
+
+    def decrease_speed(self, event):
+        self.words_per_minute -= 20
+        if self.words_per_minute < 20:  # Prevent speed from going below 20
+            self.words_per_minute = 20
+        self.wpm_label.config(text=f"WPM: {self.words_per_minute}")
 
     def start_reading(self):
         epub_file = filedialog.askopenfilename(filetypes=[("EPUB files", "*.epub")])
@@ -40,6 +58,8 @@ class SpeedReader(tk.Tk):
         
         def select_chapter(*args):
             chapter_name = chapter_var.get()
+            if chapter_name == "Choose Chapter":
+                return
             index = chapter_names.index(chapter_name)
             text = chapters[index].get_content().decode('utf-8')
             soup = BeautifulSoup(text, 'html.parser')
@@ -49,12 +69,13 @@ class SpeedReader(tk.Tk):
             Thread(target=self.speed_read, args=(text,)).start()
 
         chapter_var = tk.StringVar(self)
+        chapter_var.set("Choose Chapter")  # Set the initial value
         chapter_var.trace('w', select_chapter)
         self.chapter_dropdown = tk.OptionMenu(self, chapter_var, *chapter_names)
         if self.chapter_dropdown is not None:
             self.chapter_dropdown.grid_forget()  
             self.chapter_dropdown = tk.OptionMenu(self, chapter_var, *chapter_names)
-            self.chapter_dropdown.grid(row=5, column=0) 
+            self.chapter_dropdown.grid(row=5, column=0, pady=10) 
 
     def reset(self):
         self.stop_reading.set()  # Stop any ongoing speed reading
@@ -83,12 +104,13 @@ class SpeedReader(tk.Tk):
             time.sleep(1/words_per_second) # Pause for the appropriate time
 
 
-    def toggle_pause(self):
+    def toggle_pause(self, event=None):
         self.pause_reading = not self.pause_reading
 
     def open_settings(self):
         self.words_per_minute = simpledialog.askinteger("Settings", "Words per minute:", initialvalue=self.words_per_minute)
         self.words_at_a_time = simpledialog.askinteger("Settings", "Words at a time:", initialvalue=self.words_at_a_time)
+        self.wpm_label.config(text=f"WPM: {self.words_per_minute}")  # Update the label after changing the settings
 
 # Example usage:
 app = SpeedReader()
