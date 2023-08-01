@@ -1,0 +1,5 @@
+beautifulsoup4==4.12.2
+EbookLib==0.18
+lxml==4.9.3
+six==1.16.0
+soupsieve==2.4.1
