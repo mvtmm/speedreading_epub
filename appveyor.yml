@@ -1,4 +1,4 @@
-nvironment:
+environment:
   matrix:
     - job_name: Windows
       QTDIR: C:\Qt\5.10.1\msvc2017_64
